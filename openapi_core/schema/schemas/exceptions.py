@@ -8,7 +8,7 @@ class OpenAPISchemaError(OpenAPIMappingError):
     schema = attr.ib()
 
     def __str__(self):
-        if self.schema.schema_deref is not None and hasattr(self.schema, 'lc'):
+        if self.schema.schema_deref is not None and hasattr(self.schema.schema_deref, 'lc'):
             return '[line: {0} col: {1}]'.format(
                 self.schema.schema_deref.lc.line,
                 self.schema.schema_deref.lc.col,
