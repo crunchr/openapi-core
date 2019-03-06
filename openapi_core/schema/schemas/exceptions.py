@@ -21,7 +21,7 @@ class InvalidSchema(OpenAPISchemaError):
     msg = attr.ib()
 
     def __str__(self):
-        return self.msg + super(self).__str__()
+        return self.msg + super(OpenAPISchemaError, self).__str__()
 
 
 @attr.s
@@ -29,7 +29,7 @@ class InvalidFormat(OpenAPISchemaError):
     msg = attr.ib()
 
     def __str__(self):
-        return self.msg + super(self).__str__()
+        return self.msg + super(InvalidFormat, self).__str__()
 
 
 @attr.s
@@ -37,7 +37,10 @@ class NoValidSchema(OpenAPISchemaError):
     value = attr.ib()
 
     def __str__(self):
-        return "No valid schema found for value: {0}{1}".format(self.value, super(self).__str__())
+        return "No valid schema found for value: {0}{1}".format(
+            self.value,
+            super(OpenAPISchemaError, self).__str__(),
+        )
 
 
 @attr.s
@@ -45,7 +48,10 @@ class UndefinedItemsSchema(OpenAPISchemaError):
     type = attr.ib()
 
     def __str__(self):
-        return "Null value for schema type {0}{1}".format(self.type, super(self).__str__())
+        return "Null value for schema type {0}{1}".format(
+            self.type,
+            super(UndefinedItemsSchema, self).__str__(),
+        )
 
 
 @attr.s
@@ -55,7 +61,8 @@ class InvalidSchemaValue(OpenAPISchemaError):
     type = attr.ib()
 
     def __str__(self):
-        return self.msg.format(value=self.value, type=self.type) + super(self).__str__()
+        return self.msg.format(value=self.value, type=self.type) + \
+               super(InvalidSchemaValue, self).__str__()
 
 
 @attr.s
@@ -64,7 +71,7 @@ class InvalidCustomFormatSchemaValue(InvalidSchemaValue):
 
     def __str__(self):
         msg = self.msg.format(value=self.value, type=self.type, exception=self.original_exception)
-        return msg + super(self).__str__()
+        return msg + super(InvalidCustomFormatSchemaValue, self).__str__()
 
 
 @attr.s
@@ -74,7 +81,7 @@ class UndefinedSchemaProperty(OpenAPISchemaError):
     def __str__(self):
         return "Extra unexpected properties found in schema: {0}{1}".format(
             self.extra_props,
-            super(self).__str__(),
+            super(UndefinedSchemaProperty, self).__str__(),
         )
 
 
@@ -87,7 +94,7 @@ class InvalidSchemaProperty(OpenAPISchemaError):
         return "Invalid schema property {0}: {1}{2}".format(
             self.property_name,
             self.original_exception,
-            super(self).__str__(),
+            super(InvalidSchemaProperty, self).__str__(),
         )
 
 
@@ -98,7 +105,7 @@ class MissingSchemaProperty(OpenAPISchemaError):
     def __str__(self):
         return "Missing schema property: {0}{1}".format(
             self.property_name,
-            super(self).__str__(),
+            super(MissingSchemaProperty, self).__str__(),
         )
 
 
@@ -109,7 +116,7 @@ class NoOneOfSchema(OpenAPISchemaError):
     def __str__(self):
         return "Exactly one valid schema type {0} should be valid, None found{1}".format(
             self.type,
-            super(self).__str__(),
+            super(NoOneOfSchema, self).__str__(),
         )
 
 
@@ -120,5 +127,5 @@ class MultipleOneOfSchema(OpenAPISchemaError):
     def __str__(self):
         return "Exactly one schema type {0} should be valid, more than one found{1}".format(
             self.type,
-            super(self).__str__(),
+            super(MultipleOneOfSchema, self).__str__(),
         )
