@@ -244,11 +244,11 @@ class Schema(object):
                     continue
                 else:
                     if result is not None:
-                        raise MultipleOneOfSchema(self.type)
+                        raise MultipleOneOfSchema(self, self.type)
                     result = casted
 
             if result is None:
-                raise NoOneOfSchema(self.type)
+                raise NoOneOfSchema(self, self.type)
 
             return result
         else:
@@ -264,7 +264,7 @@ class Schema(object):
 
     def _unmarshal_collection(self, value, custom_formatters=None):
         if not isinstance(value, (list, )):
-            raise InvalidSchemaValue("Value {value} is not of type {type}", value, self.type)
+            raise InvalidSchemaValue(self, "Value {value} is not of type {type}", value, self.type)
 
         if self.items is None:
             raise UndefinedItemsSchema(self, self.type)
