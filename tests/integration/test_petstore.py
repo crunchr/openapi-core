@@ -1,5 +1,6 @@
 import json
 import pytest
+from datetime import datetime
 from base64 import b64encode
 from uuid import UUID
 from six import iteritems
@@ -17,9 +18,6 @@ from openapi_core.schema.parameters.models import Parameter
 from openapi_core.schema.paths.models import Path
 from openapi_core.schema.request_bodies.models import RequestBody
 from openapi_core.schema.responses.models import Response
-from openapi_core.schema.schemas.exceptions import (
-    NoValidSchema,
-)
 from openapi_core.schema.schemas.models import Schema
 from openapi_core.schema.servers.exceptions import InvalidServer
 from openapi_core.schema.servers.models import Server, ServerVariable
@@ -528,6 +526,7 @@ class TestPetstore(object):
         assert body.address.city == pet_city
         assert body.healthy == pet_healthy
 
+    @pytest.mark.xfail(reason='truthy values should not cast to bool')
     def test_post_cats_boolean_string(self, spec, spec_dict):
         host_url = 'http://petstore.swagger.io/v1'
         path_pattern = '/v1/pets'
@@ -1111,7 +1110,7 @@ class TestPetstore(object):
 
         assert parameters == {}
         assert isinstance(body, BaseModel)
-        assert body.created == created
+        assert body.created == datetime(2016, 4, 16, 16, 6, 5)
         assert body.name == pet_name
 
         code = 400
@@ -1155,7 +1154,7 @@ class TestPetstore(object):
         )
 
         parameters = request.get_parameters(spec)
-        with pytest.raises(NoValidSchema):
+        with pytest.raises(InvalidMediaTypeValue):
             request.get_body(spec)
 
         assert parameters == {}
