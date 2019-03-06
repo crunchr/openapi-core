@@ -15,17 +15,19 @@ class SchemaRegistry(SchemaFactory):
         super(SchemaRegistry, self).__init__(dereferencer)
         self._schemas = {}
 
-    def get_or_create(self, schema_spec):
-        schema_hash = dicthash(schema_spec)
+    def get_or_create(self, schema_spec, schema_name=''):
+        schema_spec_hash_gen = dict(schema_spec)
+        schema_spec_hash_gen['schema_name'] = schema_name
+        schema_hash = dicthash(schema_spec_hash_gen)
         schema_deref = self.dereferencer.dereference(schema_spec)
 
         if schema_hash in self._schemas:
             return self._schemas[schema_hash], False
 
         if '$ref' in schema_spec:
-            schema = Proxy(lambda: self.create(schema_deref))
+            schema = Proxy(lambda: self.create(schema_deref, schema_name))
         else:
-            schema = self.create(schema_deref)
+            schema = self.create(schema_deref, schema_name)
 
         self._schemas[schema_hash] = schema
 
